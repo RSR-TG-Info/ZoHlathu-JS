@@ -1,6 +1,7 @@
 const Parser = require('rss-parser');
 const { htmlToText } = require('html-to-text');
-const ytSearch = require('yt-search');
+const { Client } = require('youtubei');
+const youtube = new Client();
 
 /**
  * Fetch lyrics for the given song query
@@ -19,15 +20,15 @@ async function get_lyrics(query) {
     let feed_url = "";
 
     try {
-        const results = await ytSearch(query);
-        const videos = results.videos;
+        const searchResults = await youtube.search(query, { type: "video" });
 
-        if (!videos || videos.length === 0) {
+        if (!searchResults || !searchResults.items || searchResults.items.length === 0) {
             console.log(`No YouTube results found for query: ${query}`);
             return null;
         }
 
-        const titlep = videos[0].title.substring(0, 100);
+        const video = searchResults.items[0];
+        const titlep = video.title.substring(0, 100);
         const search_query = titlep.replace(/ /g, '+');
         feed_url = `${base_url}?q=${search_query}`;
 
