@@ -17,6 +17,9 @@
   ],
   "author": "RSR",
   "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "dependencies": {
     "rss-parser": "*",
     "html-to-text": "*",
