@@ -61,17 +61,29 @@ async function get_lyrics(query) {
         const htmlParts = entry.content.split(/<hr[^>]*>/i);
         const lyricsHtmlOnly = htmlParts[0];
 
-        let content = htmlToText(lyricsHtmlOnly, {
+        let cleaned_content = htmlToText(lyricsHtmlOnly, {
             wordwrap: false,
             preserveNewlines: true,
+            formatters: {
+                'lineBreak': (el, walk, options) => {
+                    return '\n';
+                }
+            },
             selectors: [
-                { selector: 'a', options: { ignoreHref: true } }, 
-                { selector: 'img', format: 'skip' } 
+                { 
+                    selector: 'p', 
+                    options: { 
+                        leadingLineBreaks: 1, 
+                        trailingLineBreaks: 1 
+                    } 
+                },
+                { selector: 'br', format: 'lineBreak' },
+                { selector: 'a', options: { ignoreHref: true } },
+                { selector: 'img', format: 'skip' }
             ]
         });
 
-
-        let cleaned_content = content.replace(/\n{3,}/g, '\n\n').trim();
+        cleaned_content = cleaned_content.replace(/\n{3,}/g, '\n\n').trim();
 
 
         return {
