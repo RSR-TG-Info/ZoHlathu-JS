@@ -1,6 +1,6 @@
 {
   "name": "zohlathu",
-  "version": "1.0.5",
+  "version": "1.0.9",
   "description": "A Node.js package for fetching Mizo song lyrics from www.zohlathu.in",
   "main": "index.js",
   "scripts": {
@@ -21,8 +21,11 @@
     "node": ">=14.0.0"
   },
   "dependencies": {
-    "rss-parser": "*",
-    "html-to-text": "*",
-    "yt-search": "*"
+    "html-to-text": "^9.0.5",
+    "rss-parser": "^3.13.0",
+    "youtubei": "^1.8.5"
+  },
+  "overrides": {
+    "minimatch": "^5.0.0"
   }
 }
