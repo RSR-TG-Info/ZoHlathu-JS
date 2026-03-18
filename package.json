@@ -1,6 +1,6 @@
 {
   "name": "zohlathu",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "description": "A Node.js package for fetching Mizo song lyrics from www.zohlathu.in",
   "main": "index.js",
   "scripts": {
