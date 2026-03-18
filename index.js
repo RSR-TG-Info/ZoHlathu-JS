@@ -4,7 +4,7 @@ const ytSearch = require('yt-search');
 
 /**
  * Fetch lyrics for the given song query
- * * @param {string} query - Song name or artist to search for
+ * @param {string} query - Song name or artist to search for
  * @returns {Promise<Object|null>} - Dictionary containing title and lyrics, or null if not found
  */
 async function get_lyrics(query) {
@@ -48,7 +48,6 @@ async function get_lyrics(query) {
             }
         });
 
-
         const feed = await parser.parseURL(feed_url);
 
         if (!feed.items || feed.items.length === 0) {
@@ -58,15 +57,22 @@ async function get_lyrics(query) {
 
         const entry = feed.items[0];
 
+    
+        const htmlParts = entry.content.split(/<hr[^>]*>/i);
+        const lyricsHtmlOnly = htmlParts[0];
 
-        let content = htmlToText(entry.content, {
+        let content = htmlToText(lyricsHtmlOnly, {
             wordwrap: false,
-            preserveNewlines: true
+            preserveNewlines: true,
+            selectors: [
+                { selector: 'a', options: { ignoreHref: true } }, 
+                { selector: 'img', format: 'skip' } 
+            ]
         });
 
 
-        const pattern = /\* \* \*[\s\S]*?\* \* \*/g;
-        const cleaned_content = content.replace(pattern, '').trim();
+        let cleaned_content = content.replace(/\n{3,}/g, '\n\n').trim();
+
 
         return {
             title: entry.title,
