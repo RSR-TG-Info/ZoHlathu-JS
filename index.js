@@ -14,8 +14,10 @@ async function get_lyrics(query) {
         console.error("Input validation error: Invalid search query. Must be a non-empty string.");
         return null;
     }
+
     const base_url = "https://www.blogger.com/feeds/690973182178026088/posts/default";
     let feed_url = "";
+
     try {
         const results = await ytSearch(query);
         const videos = results.videos;
@@ -30,7 +32,7 @@ async function get_lyrics(query) {
         feed_url = `${base_url}?q=${search_query}`;
 
     } catch (youtube_error) {
-        console.error(`YouTube error: ${youtube_error}`);
+        console.error(`Youtube error: ${youtube_error}`);
         return null;
     }
 
@@ -38,17 +40,16 @@ async function get_lyrics(query) {
         const parser = new Parser({
             customFields: {
                 item: ['content']
-            }
-        });
-
-        const feed = await parser.parseURL({
-            url: feed_url,
+            },
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
                 'Accept-Language': 'en-US,en;q=0.9',
                 'Accept': 'application/atom+xml,text/html'
             }
         });
+
+
+        const feed = await parser.parseURL(feed_url);
 
         if (!feed.items || feed.items.length === 0) {
             console.log(`No entries found in feed for query: ${query}`);
@@ -57,10 +58,12 @@ async function get_lyrics(query) {
 
         const entry = feed.items[0];
 
+
         let content = htmlToText(entry.content, {
             wordwrap: false,
             preserveNewlines: true
         });
+
 
         const pattern = /\* \* \*[\s\S]*?\* \* \*/g;
         const cleaned_content = content.replace(pattern, '').trim();
